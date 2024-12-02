@@ -1,0 +1,25 @@
+{% extends prestamos/base.html%}
+{%block content %}
+<h1>Préstamos Activos</h1>
+<table>
+    <tr>
+        <th>Libro</th>
+        <th>Usuario</th>
+        <th>Fecha de Préstamo</th>
+        <th>Fecha de Devolución</th>
+        <th>Devuelto</th>
+    </tr>
+    {% for p in prestamos %}
+    <tr>
+        <td>{{ p.book.title }}</td>
+        <td>{{ p.user }}</td>
+        <td>{{ p.date_prestamo }}</td>
+        <td>{{ p.date_devolucion }}</td>
+        <td>{{ p.devuelto|yesno:"Sí,No" }}</td>
+        <td>
+            <a href="{% url 'prestamo-detail' prestamo.pk %}">Ver detalles</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock%}

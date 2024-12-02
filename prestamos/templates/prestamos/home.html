@@ -1,0 +1,44 @@
+{% extends 'prestamos/base.html' %}
+
+{% block content %}
+    <h1>Accesos</h1>
+
+    <div class="actions">
+        <a href="{% url 'create-book' %}" class="btn btn-primary">Agregar Libro</a>
+        <a href="{% url 'create-author' %}" class="btn btn-primary">Agregar Autor</a>
+        <a href="{% url 'create-category' %}" class="btn btn-primary">Agregar Categoría</a>
+    </div>
+
+    <h2>Libros Disponibles</h2>
+    <div class="row">
+        {% for book in books %}
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="{{ book.image.url }}" alt="Imagen del libro" width="100px" height="200px">
+                    </div>
+                    <div class="card-content">
+                        <h5>{{ book.title }}</h5>
+                        <p> {{ book.author.name }}</p>
+                        <p>{{ book.description }}</p>
+                        <p><strong>Categorías:</strong> 
+                            <ul>
+                                {% for category in book.category.all %}
+                                    <li>{{ category.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </p>
+
+                        <div class="card-action">
+                            <a href="{% url 'update-book' book.pk %}" class="btn btn-secondary">Editar</a>
+                            <a href="{% url 'delete-book' book.pk %}" class="btn btn-danger" 
+                               onclick="return confirm('¿Estás seguro de que quieres eliminar este libro?')">
+                               Eliminar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+

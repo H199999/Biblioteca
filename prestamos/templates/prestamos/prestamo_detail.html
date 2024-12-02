@@ -1,0 +1,29 @@
+{% extends prestamos/base.html%}
+{%block content %}
+    <h1>Detalle del Préstamo</h1>
+
+    <table>
+        <tr>
+            <th>Libro</th>
+            <td>{{ p.book.title }}</td>
+        </tr>
+        <tr>
+            <th>Usuario</th>
+            <td>{{ p.user }}</td>
+        </tr>
+        <tr>
+            <th>Fecha de Préstamo</th>
+            <td>{{ p.date_prestamo }}</td>
+        </tr>
+        <tr>
+            <th>Fecha de Devolución</th>
+            <td>{{ p.date_devolucion }}</td>
+        </tr>
+        <tr>
+            <th>Devuelto</th>
+            <td>{{ p.devuelto|yesno:"Sí,No" }}</td>
+        </tr>
+    </table>
+
+    <p><a href="{% url 'prestamo-detail' %}">Volver a la lista de préstamos</a></p>
+{%endblock%}

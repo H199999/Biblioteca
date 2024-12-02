@@ -1,0 +1,36 @@
+{% extends 'prestamos/base.html' %}
+
+{% block content %}
+    <h1>Bienvenido a la Biblioteca</h1>
+    <h2>Libros disponibles</h2>
+    <div class="row">
+        {% for l in books %}
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-image">
+                        {% if l.image %}
+                            <img src="{{ l.image.url }}" width="100px" height="200px">
+                        {% else %}
+                            <img src=# width="100px" height="200px">
+                        {% endif %}
+                    </div>
+                    <div class="card-content">
+                        <h5>{{ l.title }}</h5>
+                        <p> {{ l.author.name }}</p>
+                        <p>{{ l.description }}</p>
+                        <p><strong>Categorías:</strong> 
+                            <ul>
+                                {% for category in l.category.all %}
+                                    <li>{{ category.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="card-action">
+                        <a href="{% url 'create-prestamo' l.pk %}" class="btn btn-secondary">Prestar</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
