@@ -4,26 +4,45 @@
 
     <table>
         <tr>
-            <th>Libro</th>
-            <td>{{ p.book.title }}</td>
-        </tr>
-        <tr>
             <th>Usuario</th>
-            <td>{{ p.user }}</td>
+            {% for u in users%}
+                <td>{{ u.user }}</td>
+            {% endfor%}
         </tr>
         <tr>
-            <th>Fecha de Préstamo</th>
-            <td>{{ p.date_prestamo }}</td>
+            <th>Libro</th>
+            {% for l in books%}
+                <td>{{ l.book.isbn}}</td>
+                <td>{{ l.book.title }}</td>
+                <td>{{ l.book.author}}</td>
+                <td>{{ l.book.editor}}</td>
+            {% endfor %}
         </tr>
+        {% for p in listaprestamos %}
+            <tr>
+                <th>Fecha de Préstamo</th>
+                <td>{{ p.date_prestamo }}</td>
+            </tr>
+            <tr>
+                <th>Fecha de Devolución</th>
+                <td>{{ p.date_devolucion }}</td>
+            </tr>
+            <tr>
+                <th>Devuelto</th>
+                <td>{{ p.devuelto|yesno:"Sí,No" }}</td>
+            </tr>
+        {% endfor %}
         <tr>
-            <th>Fecha de Devolución</th>
-            <td>{{ p.date_devolucion }}</td>
-        </tr>
-        <tr>
-            <th>Devuelto</th>
-            <td>{{ p.devuelto|yesno:"Sí,No" }}</td>
+            <th>Renovacion</th>
+            {% for r in renovacion %}
+                <td>{{r.date_renovacion}}
+                <td>{{r.date_redevolucion}}</td>
+                <td>{{r.day_devolucion}}</td>
+            {% else %}
+               <p>No se a pedido renovacion para este libro</p>
+            {% endfor %}
         </tr>
     </table>
 
-    <p><a href="{% url 'prestamo-detail' %}">Volver a la lista de préstamos</a></p>
+    <p><a href="{% url 'prestamo-list' %}">Volver a la lista de préstamos</a></p>
 {%endblock%}

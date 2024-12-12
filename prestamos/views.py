@@ -4,9 +4,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView,DeleteView, UpdateView
 from django.views.generic.detail import DetailView
-from .models import Book,Author, Category, Prestamo
+from .models import Book,Author, Category, Prestamo, User
 from .forms import BookForm, AuthorForm, PrestamoForm
 
+class UserView(LoginRequiredMixin,ListView):
+    model= User
+    context_object_name='users'
 class HomeView(LoginRequiredMixin,ListView):
     model= Book
     template_name= 'prestamos/home.html'

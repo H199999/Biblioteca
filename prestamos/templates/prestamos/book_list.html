@@ -15,9 +15,11 @@
                         {% endif %}
                     </div>
                     <div class="card-content">
-                        <h5>{{ l.title }}</h5>
+                        <h5>{{ l.book.title }}</h5>
                         <p> {{ l.author.name }}</p>
                         <p>{{ l.description }}</p>
+                        <p>{{ l.year }}</p>
+                        <p>{{ l.editor.editor }}</p>
                         <p><strong>Categorías:</strong> 
                             <ul>
                                 {% for category in l.category.all %}
