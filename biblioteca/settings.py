@@ -81,10 +81,10 @@ WSGI_APPLICATION = 'biblioteca.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'H19$default',
-        'USER': 'H19',
+        'NAME': 'H199$default',
+        'USER': 'H199',
         'PASSWORD': 'prestamos1234',
-        'HOST': 'H19.mysql.pythonanywhere-services.com',
+        'HOST': 'H199.mysql.pythonanywhere-services.com',
         'PORT': '3306'
     }
 }

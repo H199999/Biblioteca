@@ -3,6 +3,7 @@
 {% block content %}
     <h1>Bienvenido a la Biblioteca</h1>
     <h2>Libros disponibles</h2>
+    <a href="{% url 'create-book' l.pk %}" class="btn btn-secondary">Añadir libro</a>
     <div class="row">
         {% for l in books %}
             <div class="col s12 m4">
@@ -30,6 +31,12 @@
                     </div>
                     <div class="card-action">
                         <a href="{% url 'create-prestamo' l.pk %}" class="btn btn-secondary">Prestar</a>
+                    </div>
+                    <div class="card-action">
+                        <a href="{% url 'update-prestamo' l.pk %}" class="btn btn-secondary">Actualizar</a>
+                    </div>
+                    <div class="card-action">
+                        <a href="{% url 'delete-prestamo' l.pk %}" class="btn btn-secondary">Eliminar</a>
                     </div>
                 </div>
             </div>

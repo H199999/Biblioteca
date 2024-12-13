@@ -2,17 +2,17 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Trabajador(models.Model):
-    rut=models.IntegerField(max_length=8, primary_key=True)
-    rol=models.CharField(max_length=100, primary_key=True)
+    rut=models.IntegerField(primary_key=True)
+    rol=models.CharField(max_length=100)
 
     def __str__(self):
         return rol
 
 class User(models.Model):
-    rut= models.IntegerField(max_length=8, primary_key=True)
+    rut= models.IntegerField(primary_key=True)
     name= models.CharField(max_length=100, verbose_name="Nombres")
     last_name= models.CharField(max_length=100, verbose_name="Apellidos")
-    phone= models.IntegerField(max_length=9,verbose_name="Numero de telefono")
+    phone= models.IntegerField(verbose_name="Numero de telefono")
     mail= models.CharField(max_length=100, verbose_name="Correo")
     trabajador= models.ForeignKey(Trabajador,verbose_name="Rol", on_delete=models.SET_NULL, null=True)
 
@@ -47,7 +47,7 @@ class Book(models.Model):
     category = models.ManyToManyField(Category, verbose_name="Categorías")
     estado= models.BooleanField()
     stock= models.IntegerField()
-    editor = models.ForeignKey(Editor,verbose_name="Editor", on_delete=models.SET_NULL)
+    editor = models.ForeignKey(Editor,verbose_name="Editor",on_delete=models.SET)
     image = models.ImageField(upload_to='books/')
 
     def __str__(self):
@@ -63,12 +63,12 @@ class Prestamo(models.Model):
     def __str__(self):
         return self.book.user
 
-class Renovacion():
+class Renovacion(models.Model):
     date_renovacion= models.DateField(auto_now_add=True, verbose_name="Fecha de renovacion")
     date_redevolucion= models.DateField(verbose_name="Fecha de devolucion renovacion")
     day_devolucion= models.BooleanField(default=False)
 
-class Catalogo():
+class Catalogo(models.Model):
     ejemplares= models.BooleanField(default=False)
 
 class Multa(models.Model):
@@ -76,5 +76,5 @@ class Multa(models.Model):
     monto= models.IntegerField()
     cobro= models.BooleanField(default=False)
 
-class Reportes():
+class Reportes(models.Model):
     date_reporte= models.IntegerField()

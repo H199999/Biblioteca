@@ -1,23 +1,34 @@
 {% extends prestamos/base.html%}
 {%block content %}
-<h1>Préstamos Activos</h1>
-<table>
-    <tr>
-        <th>Libro</th>
-        <th>Usuario</th>
-        <th>Fecha de Préstamo</th>
-        <th>Devuelto</th>
-    </tr>
-    {% for p in listaprestamos %}
-    <tr>
-        <td>{{ p.book.title }}</td>
-        <td>{{ p.user }}</td>
-        <td>{{ p.date_prestamo }}</td>
-        <td>{{ p.devuelto|yesno:"Sí,No" }}</td>
+    <h1>Préstamos Activos</h1>
+    <table>
+        <tr>
+            <th>Libro</th>
+            <th>Usuario</th>
+            <th>Fecha de Préstamo</th>
+            <th>Devuelto</th>
+        </tr>
+        {% for p in listaprestamos %}
+            <tr>
+                <td>{{ p.book.title }}</td>
+                <td>{{ p.user }}</td>
+                <td>{{ p.date_prestamo }}</td>
+                <td>{{ p.devuelto|yesno:"Sí,No" }}</td>
+            </tr>
+        {% endfor %}
+        <h1>Renovaciones</h1>
+        <tr>            
+            <th>Fecha de renovacion</th>
+            <th>Devuelto</th>
+        </tr>
+        {% for r in renovacion %}
+                <tr>
+                    <td>{{ r.date_renovacion }}</td>
+                    <td>{{ r.day_devolucion|yesno:"Sí,No" }}</td>
+                </tr>
+        {% endfor %}
         <td>
             <a href="{% url 'prestamo-detail' prestamo.pk %}">Ver detalles</a>
         </td>
-    </tr>
-    {% endfor %}
-</table>
+    </table>
 {% endblock%}

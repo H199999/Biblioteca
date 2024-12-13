@@ -1,0 +1,13 @@
+{% extends 'prestamos/base.html' %}
+{% block content %}
+    <h1>Editoriales</h1>
+    <p><a href="{% url 'create-editor' %}">Agregar editorial</a></p>
+    {% for e in editor %}
+        <tr>
+            <td>{{ e.editor.name}}</td>
+            <td>
+                <a href="{% url 'delete-editor' c.pk %}">Eliminar editorial</a>
+            </td>
+        </tr>
+    {% endfor %}
+{%endblock%}

@@ -19,6 +19,17 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
+
+            <li class="dropdown">
+                <a href="#">Vistas</a>
+                <ul class="dropdown-content">
+                    <li><a href="#"><i class="bi bi-house-door-fill"></i>Vista 1</a></li>
+                    <li><a href="#"><i class="bi bi-house-door-fill"></i>Vista 2</a></li>
+                    <li><a href="#"><i class="bi bi-house-door-fill"></i>Vista 3</a></li>
+                </ul>
+            </li>
+
+
             <a class="navbar-brand" href="#">Biblioteca</a>
             <ul class="navbar-nav ml-auto">
                 <div class="d-flex" role="search">
@@ -49,6 +60,39 @@
             </ul>
         </div>
     </nav>
+    <div class="row">
+        <h1>Catalogo</h1>
+        {% for l in books %}
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-image">
+                        {% if l.image %}
+                            <img src="{{ l.image.url }}" width="100px" height="200px">
+                        {% else %}
+                            <img src=# width="100px" height="200px">
+                        {% endif %}
+                    </div>
+                    <div class="card-content">
+                        <h5>{{ l.book.title }}</h5>
+                        <p> {{ l.author.name }}</p>
+                        <p>{{ l.description }}</p>
+                        <p>{{ l.year }}</p>
+                        <p>{{ l.editor.editor }}</p>
+                        <p><strong>Categorías:</strong> 
+                            <ul>
+                                {% for category in l.category.all %}
+                                    <li>{{ category.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="card-action">
+                        <a href="{% url 'create-prestamo' l.pk %}" class="btn btn-secondary">Prestar</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
     <header>
         
     </header>

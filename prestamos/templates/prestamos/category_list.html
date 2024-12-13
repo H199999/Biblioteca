@@ -1,0 +1,13 @@
+{% extends 'prestamos/base.html' %}
+{% block content %}
+    <h1>Categorias</h1>
+    <p><a href="{% url 'create-category' %}">Agregar Categoria</a></p>
+    {% for c in category %}
+        <tr>
+            <td>{{ c.category.name}}</td>
+            <td>
+                <a href="{% url 'delete-category' c.pk %}">Eliminar Categoria</a>
+            </td>
+        </tr>
+    {% endfor %}
+{%endblock%}
