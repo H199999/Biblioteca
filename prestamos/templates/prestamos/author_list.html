@@ -1,0 +1,14 @@
+{% extends 'prestamos/base.html' %}
+{% block content %}
+    <h1>Autores</h1>
+    <p><a href="{% url 'create-author' %}">Agregar Autor</a></p>
+    {% for a in author %}
+        <tr>
+            <td>{{ a.author.name}}</td>
+            <td>{{ a.author.date_birth}}</td>
+            <td>
+                <a href="{% url 'delete-author' %}">Eliminar Autor</a>
+            </td>
+        </tr>
+    {% endfor %}
+{%endblock%}

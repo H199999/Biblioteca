@@ -1,0 +1,85 @@
+{% extends 'prestamos/base.html'%}
+{%block content %}
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Gestión de Multas</title>
+
+            <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+        </style>
+
+        </head>
+        <body>
+            <h1>Multas Pendientes</h1>
+            <table borde="1">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>RUT</th>
+                        <th>Libro</th>
+                        <th>Días de Atraso</th>
+                        <th>Monto</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for multa in multas %}
+                    <tr>
+                        <td>{{ multa.user.name }}</td>
+                        <td>{{ multa.user.rut }}</td>
+                        <td>{{ multa.book.title }}</td>
+                        <td>{{ multa.dias_atraso }}</td>
+                        <td>${{ multa.monto }}</td>
+                        <td>{% if multa.cobro %}
+                            Pagado
+                            {% else %}
+                            Pendiente
+                            {% endif %}</td>
+                        <td>
+                            {% if not multa.cobro %}
+                            <form method="post" action="{% url 'gestionar_multa' multa.id %}">
+                                {% csrf_token %}
+                                <button type="submit">Marcar como Pagado</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </body>
+    </html>
+{%endblock%}

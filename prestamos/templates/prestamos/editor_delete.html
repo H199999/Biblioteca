@@ -1,0 +1,11 @@
+{% extends 'prestamos/base.html' %}
+{% block content %}
+    <h1>Eliminar Editorial</h1>
+    <form method="post">
+        {% csrf_token %}
+        <p>¿Estás seguro de que deseas eliminar la editorial "{{ editor.name }}"?</p>
+
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="{% url 'list-editor'%}" class="btn btn-secondary">Cancelar</a>
+    </form>
+{% endblock %}

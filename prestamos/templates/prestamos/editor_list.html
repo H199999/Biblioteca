@@ -1,0 +1,26 @@
+{% extends 'prestamos/base.html' %}
+{% block content %}
+    <h1>Editoriales</h1>
+    <p><a href="{% url 'create-editor' %}">Agregar editorial</a></p>
+    {% if listaeditor %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for editor in listaeditor %}
+                <tr>
+                    <td>{{ editor.id }}</td>
+                    <td>{{ editor.name }}</td>
+                    <td>
+                        <a href="{% url 'delete-editor' editor.pk %}" class="btn btn-danger">Eliminar editorial</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{%endblock%}

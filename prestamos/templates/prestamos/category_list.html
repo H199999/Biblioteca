@@ -1,0 +1,17 @@
+{% extends 'prestamos/base.html' %}
+{% block content %}
+    <h1>Categorias</h1>
+    <p><a href="{% url 'create-category' %}">Agregar Categoria</a></p>
+  {% if listacategoria %}
+    <ul>
+      {% for c in listacategoria %}
+        <li>
+          {{ c.name }} (ID: {{ c.pk }})
+          <a href="{% url 'delete-category' c.pk %}">Eliminar Categoria</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay categorías disponibles.</p>
+  {% endif %}
+{% endblock %}

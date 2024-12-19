@@ -1,0 +1,34 @@
+{% extends 'prestamos/base.html' %}
+
+{% block content %}
+<h1>Libros</h1>
+<a href="{% url 'create-book' %}" class="btn btn-secondary">Agregar libro</a>
+{%if books%}
+    <div class="row">
+        {% for b in books %}
+            <div class="col-md-4">
+                <div class="card book-card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ b.title }}</h5>
+                        <p><strong>Autor:</strong> {{ b.author.name }}</p>
+                        <p><strong>Año:</strong> {{ b.year }}</p>
+                        <p><strong>Editorial:</strong> {{ b.editor.name }}</p>
+                        <div class="book-image">
+                            {% if b.image %}
+                                <img src="{{ b.image.url }}" alt="{{ b.title }}">
+                            {% else %}
+                                <img src="/static/img/placeholder.png" alt="Imagen no disponible">
+                            {% endif %}
+                        </div>
+                        <div class="action-buttons">
+                            <a href="{% url 'update-book' b.pk %}" class="btn btn-success">Editar</a>
+                            <a href="{% url 'delete-book' b.pk %}" class="btn btn-danger">Eliminar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <p>No hay libros disponibles.</p>
+{%endif%}
+{% endblock %}
