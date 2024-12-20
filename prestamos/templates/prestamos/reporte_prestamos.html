@@ -1,0 +1,38 @@
+{% extends 'prestamos/base.html' %}
+{% block content %}
+<h1>Generar Reporte de Préstamos</h1>
+
+<form class="formm" method="post" action="{% url 'reporte-prestamos' %}">
+    {% csrf_token %}
+    <label for="fecha">Seleccione una fecha:</label>
+    <input type="date" id="fecha" name="fecha" required>
+    <button type="submit" class="btn btnw">Generar Reporte</button>
+</form>
+
+{% if prestamos %}
+    <h2>Préstamos del día {{ fecha }}</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Libro</th>
+                <th>Usuario</th>
+                <th>Fecha de préstamo</th>
+                <th>Fecha de devolución</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prestamo in prestamos %}
+            <tr>
+                <td>{{ prestamo.book.title }}</td>
+                <td>{{ prestamo.user.username }}</td>
+                <td>{{ prestamo.date_prestamo }}</td>
+                <td>{{ prestamo.date_devolucion }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'reporte-prestamos-pdf' %}?fecha={{ fecha }}" class="btn btns">Descargar PDF</a>
+{% else %}
+    <p class="alert-danger">{{ mensaje }}</p>
+{% endif %}
+{% endblock %}

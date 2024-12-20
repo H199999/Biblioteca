@@ -1,0 +1,10 @@
+{% extends 'prestamos/base.html' %}
+{% block content %}
+    <h2> Comfirmar eliminar Libro</h2>
+    <p>¿Estás seguro de que deseas eliminar el libro {{ object.title }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Eliminar</button>
+        <a href="{% url 'book' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'prestamos/base.html' %}
+{% block content %}
+    <h1>Autores</h1>
+    <p><a href="{% url 'create-author' %}" class="btn btn-warning" >Agregar Autor</a></p>
+    {%if listaautor%}
+            <table>
+              <thead>
+                  <tr>
+                      <th>Nombre</th>
+                      <th>Año de nacimiento</th>
+                  </tr>
+              </thead>
+              <tbody>
+                {% for a in listaautor %}
+                  <tr>
+                    <td>{{ a.name }}</td>
+                    <td>{{ a.date_birth }}</td>
+                    <td>
+                        <a href="{% url 'delete-author' a.id %}" class="btn btn-danger">Eliminar Autor</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+    {%else%}
+    <p>No hay autores disponibles</p>
+    {% endif%}
+{%endblock%}

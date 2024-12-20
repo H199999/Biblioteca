@@ -1,0 +1,10 @@
+{% extends 'prestamos/base.html' %}
+{% block content %}
+    <h2> Comfirmar eliminar Autor</h2>
+    <p>¿Estás seguro de que deseas eliminar al autor {{ object.name }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Eliminar</button>
+        <a href="{% url 'list-author' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+{% endblock %}

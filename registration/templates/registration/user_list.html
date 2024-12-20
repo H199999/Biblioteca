@@ -1,0 +1,40 @@
+{% extends 'prestamos/base.html' %}
+
+{% block content %}
+<h1>Lista de Usuarios</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Telefono</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }} {{ user.last_name }}</td>
+            <td>{{ user.mail }}</td>
+            <td>{{ user.phone }}</td>
+            <td>
+                {% if user.rol %}
+                    Administrador
+                {% else %}
+                    Trabajador
+                {% endif %}
+            </td>
+            <td>
+                {% if user.username != "admin" %} 
+                    <a href="{% url 'user-delete' user.pk%}" class="btn btn-danger">Eliminar</a>
+                {% else %}
+                    <span class="text-muted">No eliminable</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'register' %}" class="btn btn-primary">Registrar Nuevo Usuario</a>
+{% endblock %}

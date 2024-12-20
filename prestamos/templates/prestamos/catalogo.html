@@ -1,0 +1,43 @@
+{% extends 'prestamos/base.html' %}
+
+{% block content %}
+<h1>Catálogo</h1>
+{%if books%}
+    <div class="row">
+        {% for b in books %}
+            <div class="col-md-4">
+                <div class="card book-card">
+                    <div class="card-body">
+                        <div class="book-image">
+                            {% if b.image %}
+                                <img src="{{ b.image.url }}" alt="{{ b.title }}">
+                            {% else %}
+                                <img src="/static/img/placeholder.png" alt="Imagen no disponible">
+                            {% endif %}
+                        </div>
+                        <h5 class="card-title">{{ b.title }}</h5>
+                        <p><strong>Autor:</strong> {{ b.author.name }}</p>
+                        <p><strong>Año:</strong> {{ b.year }}</p>
+                        <p><strong>Editorial:</strong> {{ b.editor.name }}</p>
+                        <p><strong>Descripción:</strong> {{ b.description }}</p>
+                        <p><strong>Categorías:</strong> 
+                            {% if b.category.all %}
+                                {% for category in b.category.all %}
+                                    {{ category.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                Sin categorías asociadas
+                            {% endif %}
+                        </p>
+                        <div class="action-buttons">
+                            <a href="{% url 'create-prestamo' b.pk %}" class="btn btn-primary">Prestar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{%else%}
+    <p>Aun no hay libros en el catálogo</p>
+{%endif%}
+{% endblock %}

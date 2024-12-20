@@ -1,0 +1,44 @@
+{% extends 'prestamos/base.html'%}
+{%block content %}
+    <h1>Préstamos Activos</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Libro</th>
+                <th>Usuario</th>
+                <th>Fecha de Préstamo</th>
+                <th>Devuelto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in listaprestamos %}
+                <tr>
+                    <td>{{ p.book.title }}</td>
+                    <td>{{ p.username }}</td>
+                    <td>{{ p.date_prestamo }}</td>
+                    <td>{{ p.devuelto|yesno:"Sí,No" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h1>Renovaciones</h1>
+    <table>
+        <thead>
+            <tr>            
+                <th>Fecha de renovacion</th>
+                <th>Devuelto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in renovacion %}
+                <tr>
+                    <td>{{ r.date_renovacion }}</td>
+                    <td>{{ r.day_devolucion|yesno:"Sí,No" }}</td>
+                </tr>
+            {% endfor %}
+            <td>
+                <a href="#" class="btn btn-secondary">Ver detalles</a>
+            </td>
+        </tbody>
+    </table>
+{% endblock%}

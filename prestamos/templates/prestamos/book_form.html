@@ -1,0 +1,101 @@
+{% extends 'prestamos/base.html' %}
+{% block content %}
+<h1>Añadir libro</h1>
+<form method="post" enctype="multipart/form-data" class="form-table">
+    {% csrf_token %}
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                    {% if field.errors %}
+                        <li>{{ field.label }}: {{ field.errors|join:", " }}</li>
+                    {% endif %}
+                {% endfor %}
+                {% if form.non_field_errors %}
+                    <li>{{ form.non_field_errors|join:", " }}</li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>ISBN</strong></td>
+                <td>
+                    {{ form.isbn }}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Título</strong></td>
+                <td>
+                    {{ form.title }}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Autor</strong></td>
+                <td>
+                    {{ form.author }}
+                    {% if no_authors %}
+                        <small class="text-danger">Se debe crear un autor antes de añadir un libro.</small>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Descripción</strong></td>
+                <td>
+                    {{ form.description }}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Año de Publicación</strong></td>
+                <td>
+                    {{ form.year }}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Editorial</strong></td>
+                <td>
+                    {{ form.editor }}
+                    {% if no_editors %}
+                        <small class="text-danger">Se debe crear un editor antes de añadir un libro.</small>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Categoría</strong></td>
+                <td>
+                    {{ form.category }}
+                    {% if no_categories %}
+                        <small class="text-danger">Se debe crear una categoría antes de añadir un libro.</small>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Estado</strong></td>
+                <td>
+                    {{ form.estado }}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Stock</strong></td>
+                <td>
+                    {{ form.stock }}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Imagen</strong></td>
+                <td>
+                    {{ form.image }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button class="btn btn-warning mt-3" type="submit">Agregar</button>
+</form>
+{% endblock %}
