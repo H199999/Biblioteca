@@ -1,48 +1,70 @@
-{% extends prestamos/base.html%}
-{%block content %}
+{% extends 'prestamos/base.html' %}
+{% block content %}
     <h1>Detalle del Préstamo</h1>
 
-    <table>
-        <tr>
-            <th>Usuario</th>
-            {% for u in usuarios%}
-                <td>{{ u.username }}</td>
-            {% endfor%}
-        </tr>
-        <tr>
-            <th>Libro</th>
-            {% for l in books%}
-                <td>{{ l.book.isbn}}</td>
-                <td>{{ l.book.title }}</td>
-                <td>{{ l.book.author}}</td>
-                <td>{{ l.book.editor}}</td>
-            {% endfor %}
-        </tr>
-        {% for p in listaprestamos %}
+    <table class="table table-striped">
+        <thead>
             <tr>
+                <th>Usuario</th>
+                <th>Cliente</th>
+                <th>Libro</th>
                 <th>Fecha de Préstamo</th>
-                <td>{{ p.date_prestamo }}</td>
-            </tr>
-            <tr>
                 <th>Fecha de Devolución</th>
-                <td>{{ p.date_devolucion }}</td>
-            </tr>
-            <tr>
                 <th>Devuelto</th>
-                <td>{{ p.devuelto|yesno:"Sí,No" }}</td>
+                <th>Renovación</th>
             </tr>
-        {% endfor %}
-        <tr>
-            <th>Renovacion</th>
-            {% for r in renovacion %}
-                <td>{{r.date_renovacion}}
-                <td>{{r.date_redevolucion}}</td>
-                <td>{{r.day_devolucion}}</td>
-            {% else %}
-               <p>No se a pedido renovacion para este libro</p>
+        </thead>
+        <tbody>
+            {% for p in listaprestamos %}
+                <tr>
+                    <td>
+                        {% with user=p.user %}
+                            {{ user.username }}<br>
+                            {{ user.last_name }}
+                        {% endwith %}
+                    </td>
+                    <td>
+                        {% with cliente=p.user.perfil_cliente %}
+                            {{ cliente.name }} {{ cliente.last_name }}<br>
+                            RUT: {{ cliente.rut }}
+                        {% endwith %}
+                    </td>
+
+                    <td>
+                        {% with book=p.book %}
+                            ISBN: {{ book.isbn }}<br>
+                            Título: {{ book.title }}<br>
+                            Autor: {{ book.author }}<br>
+                            Editor: {{ book.editor }}
+                        {% endwith %}
+                    </td>
+
+                    <td>{{ p.date_prestamo }}</td>
+                    <td>{{ p.date_devolucion }}</td>
+
+                    <td>{{ p.devuelto|yesno:"Sí,No" }}</td>
+
+                    <td>
+                        {% for r in renovacion %}
+                            Fecha de Renovación: {{ r.date_renovacion }}<br>
+                            Nueva Fecha de Devolución: {{ r.date_redevolucion }}<br>
+                            Días Extendidos: {{ r.day_devolucion }}
+                        {% empty %}
+                            <em>No se ha solicitado renovación</em>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center;">
+                        <em>No hay préstamos registrados.</em>
+                    </td>
+                </tr>
             {% endfor %}
-        </tr>
+        </tbody>
     </table>
 
-    <p><a href="{% url 'prestamo-list' %}">Volver</a></p>
-{%endblock%}
+    <p>
+        <a href="{% url 'list-prestamo' %}" class="btn btn-secondary">Volver a la lista</a>
+    </p>
+{% endblock %}

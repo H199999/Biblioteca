@@ -50,6 +50,8 @@ class UserListView(UserPassesTestMixin, ListView):
     template_name = 'registration/user_list.html'
     context_object_name = 'users'
 
+    def get_queryset(self):
+        return CustomUser.objects.filter(rol=True) 
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.is_admin()
 

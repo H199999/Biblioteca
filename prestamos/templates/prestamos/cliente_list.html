@@ -1,0 +1,51 @@
+{% extends 'prestamos/base.html' %}
+
+{% block content %}
+    <h1>Clientes</h1>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Libros Prestados</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in clientes %}
+                    <tr>
+                        <td>
+                            <strong>{{ c.user.perfil_cliente.name }} {{ c.user.perfil_cliente.last_name }}</strong><br>
+                            <small class="text-muted">Rut:{{ c.user.perfil_cliente.rut }}</small><br>
+                            <span class="text-muted">Telefono:{{ c.user.perfil_cliente.phone }}</span><br>
+                            <span class="text-muted">Correo:{{ c.user.perfil_cliente.mail }}</span>
+                        </td>
+
+                        <td>
+                            {% for l in listaprestamos %}
+                            <div>
+                                <strong>Libro:</strong> {{ l.book.title }}<br>
+                                <strong>Fecha de Préstamo:</strong> {{ l.date_prestamo|date:"d-m-Y" }}<br>
+                                <strong>Fecha de Devolución:</strong> {{ l.date_devolucion|date:"d-m-Y" }}<br>
+                                <strong>Devuelto:</strong> {{ l.devuelto|yesno:"Sí,No" }}<br><br>
+                            </div>
+                            {% empty %}
+                                <em>No se han registrado libros prestados.</em>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a href="{% url 'detail-cliente' c.pk %}" class="btn btn-secondary">Ver detalles</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <em>No hay clientes registrados.</em>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+

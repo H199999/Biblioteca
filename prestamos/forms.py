@@ -1,15 +1,20 @@
 from django import forms
-from .models import Prestamo,Book,Author,Renovacion,Editor
+from .models import Prestamo,Book,Author,Renovacion,Editor,PerfilCliente
 from datetime import date
 
 class PrestamoForm(forms.ModelForm):
     class Meta:
         model = Prestamo
-        fields = ['book', 'user','date_devolucion', 'devuelto']
+        fields = ['book', 'date_devolucion']  
         widgets = {
             'date_devolucion': forms.DateInput(attrs={'type': 'date'}),
-            'devuelto': forms.CheckboxSelectMultiple()
+            'devuelto': forms.RadioSelect(choices=[(True, 'Sí'), (False, 'No')]),
         }
+
+class ClienteForm(forms.ModelForm):
+    class Meta:
+        model = PerfilCliente
+        fields = ['rut','name','last_name','phone', 'mail']
 
 class BookForm(forms.ModelForm):
     class Meta:
@@ -21,12 +26,17 @@ class BookForm(forms.ModelForm):
             'estado': forms.RadioSelect(choices=[(True, 'Activo'), (False, 'Inactivo')]),
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['author'].empty_label = "Se debe crear un autor"
-        self.fields['category'].empty_label = "Se debe crear una categoría"
-        self.fields['editor'].empty_label = "Se debe crear una editorial"
-    
+
+class BookUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = [ 'title', 'author', 'year', 'description', 'category', 'editor','estado', 'stock', 'image']
+        widgets = {
+            'stock': forms.NumberInput(attrs={'min': 1, 'max': 20}),
+            'year': forms.NumberInput(attrs={'min': 1000, 'max': date.today().year}),
+            'estado': forms.RadioSelect(choices=[(True, 'Activo'), (False, 'Inactivo')]),
+        }
+
 class AuthorForm(forms.ModelForm):
     class Meta:
         model = Author
@@ -50,3 +60,5 @@ class EditorForm(forms.ModelForm):
         fields = ['name']
         widgets = {
             'editor': forms.CheckboxSelectMultiple()}
+ 
+

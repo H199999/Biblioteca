@@ -1,9 +1,11 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView
-from .views import BookListView,BookCreateView,BookDeleteView,BookUpdateView,AuthorCreateView,AuthorDeleteView,CategoryCreateView,CategoryListView,CategoryDeleteView,PrestamoCreateView,PrestamoListView,PrestamoDetailView,CatalogoListView,AuthorListView,RenovCreateView,EditorListView,EditorCreateView,EditorDeleteView,MultaListView
+from .views import BookListView,BookCreateView,BookDeleteView,BookUpdateView,AuthorCreateView,AuthorDeleteView,CategoryCreateView,CategoryListView,CategoryDeleteView,PrestamoCreateView,PrestamoListView,PrestamoDetailView,CatalogoListView,AuthorListView,RenovCreateView,EditorListView,EditorCreateView,EditorDeleteView,MultaListView,ClienteDetailView,ClienteListView
 from registration.views import UserDeleteView,UserListView
 urlpatterns = [
     path('', CatalogoListView.as_view(), name='home'),
+     path('listCliente/', ClienteListView.as_view(), name='list-cliente'),
+    path('detailCliente/<int:pk>/', ClienteDetailView.as_view(), name='detail-cliente'),
     path('listBook', BookListView.as_view(), name='book'),
     path('book/', BookCreateView.as_view(), name='create-book'),
     path('deleteBook/<int:pk>/', BookDeleteView.as_view(), name='delete-book'),

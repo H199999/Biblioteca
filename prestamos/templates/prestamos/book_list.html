@@ -34,7 +34,9 @@
                         <p><strong>Stock:</strong> {{ b.stock }}</p>
                         <div class="action-buttons">
                             <a href="{% url 'update-book' b.pk %}" class="btn btn-success">Editar</a>
+                            {% if not b.estado %}
                             <a href="{% url 'delete-book' b.pk %}" class="btn btn-danger">Eliminar</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from datetime import date
+from django.conf import settings
 class CustomUser(AbstractUser):
     rut = models.CharField(max_length=9, primary_key=True, unique=True)
     username = models.CharField(max_length=100, verbose_name="Nombres", unique=True)
@@ -32,6 +33,22 @@ class CustomUser(AbstractUser):
     def is_trabajador(self):
         return not self.rol  
 
+
+class PerfilCliente(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="perfil_cliente",verbose_name="Usuario")
+    name = models.CharField(max_length=100, verbose_name="Nombres")
+    last_name = models.CharField(max_length=100, verbose_name="Apellidos")
+    rut = models.CharField(max_length=12, unique=True, verbose_name="RUT")
+    phone = models.CharField(max_length=15, verbose_name="Teléfono")
+    mail = models.EmailField(verbose_name="Correo Electrónico", unique=True)
+
+    def __str__(self):
+        return f"{self.name} {self.last_name} ({self.rut})"
+
+    class Meta:
+        verbose_name = "Perfil de Cliente"
+        verbose_name_plural = "Perfiles de Clientes"
+
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nombre")
 
@@ -46,7 +63,7 @@ class Author(models.Model):
         return self.name
 
 class Editor(models.Model):
-    name= models.CharField(max_length=50,verbose_name="Editor",default='editorial')
+    name= models.CharField(max_length=50,verbose_name="Editor")
 
     def __str__(self):
         return self.name
@@ -78,6 +95,7 @@ class Prestamo(models.Model):
     date_prestamo = models.DateField(auto_now_add=True, verbose_name="Fecha de prestamo")
     date_devolucion = models.DateField( verbose_name="Fecha de devolución")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, verbose_name="Usuario")
+    clientes= models.ForeignKey(PerfilCliente, on_delete=models.CASCADE,verbose_name="Cliente")
     devuelto = models.BooleanField(default=False)
 
     def __str__(self):
@@ -87,8 +105,10 @@ class Renovacion(models.Model):
     date_renovacion= models.DateField(auto_now_add=True, verbose_name="Fecha de renovacion")
     date_redevolucion= models.DateField(verbose_name="Fecha de devolucion renovacion")
     day_devolucion= models.BooleanField(default=False)
-
-
+    prestamo= models.ForeignKey(Prestamo, on_delete=models.CASCADE, related_name="renovaciones")
+    def __str__(self):
+        return f"Renovación del préstamo {self.prestamo} el {self.date_renovacion}"
+        
 class Multa(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Usuario")
     book = models.ForeignKey('Book', on_delete=models.CASCADE, verbose_name="Libro")

@@ -1,8 +1,47 @@
 {% extends 'prestamos/base.html' %}
 
 {% block content %}
-<h1>Catálogo</h1>
-{%if books%}
+<h1 class="catalog-title">Catálogo</h1>
+
+<!-- Buscador y Filtros -->
+<form class="formm" method="get">
+    <input type="text" name="search" placeholder="Buscar por título" value="{{ request.GET.search }}" class="form-control">
+
+    <!-- Filtro por Autor -->
+    <select name="author" class="form-control">
+        <option value="">Todos los autores</option>
+        {% for author in authors %}
+            <option value="{{ author.name }}" {% if request.GET.author == author.name %}selected{% endif %}>
+                {{ author.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <!-- Filtro por Categoría -->
+    <select name="category" class="form-control">
+        <option value="">Todas las categorías</option>
+        {% for category in categories %}
+            <option value="{{ category.name }}" {% if request.GET.category == category.name %}selected{% endif %}>
+                {{ category.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <!-- Filtro por Editorial -->
+    <select name="editor" class="form-control">
+        <option value="">Todas las editoriales</option>
+        {% for editor in editors %}
+            <option value="{{ editor.name }}" {% if request.GET.editor == editor.name %}selected{% endif %}>
+                {{ editor.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btnw">Buscar</button>
+</form>
+
+<!-- Catálogo -->
+{% if books %}
     <div class="row">
         {% for b in books %}
             <div class="col-md-4">
@@ -20,7 +59,7 @@
                         <p><strong>Año:</strong> {{ b.year }}</p>
                         <p><strong>Editorial:</strong> {{ b.editor.name }}</p>
                         <p><strong>Descripción:</strong> {{ b.description }}</p>
-                        <p><strong>Categorías:</strong> 
+                        <p><strong>Categorías:</strong>
                             {% if b.category.all %}
                                 {% for category in b.category.all %}
                                     {{ category.name }}{% if not forloop.last %}, {% endif %}
@@ -37,7 +76,7 @@
             </div>
         {% endfor %}
     </div>
-{%else%}
-    <p>Aun no hay libros en el catálogo</p>
-{%endif%}
+{% else %}
+    <p>No hay libros disponibles que coincidan con los criterios de búsqueda.</p>
+{% endif %}
 {% endblock %}

@@ -1,44 +1,71 @@
 {% extends 'prestamos/base.html'%}
 {%block content %}
-    <h1>Préstamos Activos</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Libro</th>
-                <th>Usuario</th>
-                <th>Fecha de Préstamo</th>
-                <th>Devuelto</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in listaprestamos %}
+    <style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    button {
+        padding: 5px 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+    </style>
+    <body>
+        <h1>Préstamos Activos</h1>
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ p.book.title }}</td>
-                    <td>{{ p.username }}</td>
-                    <td>{{ p.date_prestamo }}</td>
-                    <td>{{ p.devuelto|yesno:"Sí,No" }}</td>
+                    <th>Usuario</th>
+                    <th>Cliente</th>
+                    <th>Libro</th>
+                    <th>Fecha de Préstamo</th>
+                    <th>Devuelto</th>
+                    <th>Renovación</th>
+                    <th>Detalle</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <h1>Renovaciones</h1>
-    <table>
-        <thead>
-            <tr>            
-                <th>Fecha de renovacion</th>
-                <th>Devuelto</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for r in renovacion %}
-                <tr>
-                    <td>{{ r.date_renovacion }}</td>
-                    <td>{{ r.day_devolucion|yesno:"Sí,No" }}</td>
-                </tr>
-            {% endfor %}
-            <td>
-                <a href="#" class="btn btn-secondary">Ver detalles</a>
-            </td>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for p in listaprestamos %}
+                    <tr>
+                        <td>{{ p.user.username }}{{ p.user.last_name}}</td>
+                        <td>
+                            {% with cliente=p.clientes %}
+                                {{ cliente.name }} {{ cliente.last_name }}<br>
+                                {{ cliente.rut }}
+                            {% endwith %}
+                        </td>
+                        <td>{{ p.book.title }}</td>
+                        <td>{{ p.date_prestamo }}</td>
+                        <td>{{ p.devuelto|yesno:"Sí,No" }}</td>
+                        <td><a href="{% url 'create-renovacion' p.pk %}" class="btn btn-warning">Renovar</a></td>
+                        <td><a href="{% url 'prestamo-detail' p.pk %}" class="btn btn-secondary">Ver detalles</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </body>
+    
 {% endblock%}

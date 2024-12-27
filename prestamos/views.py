@@ -4,10 +4,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView,DeleteView, UpdateView
 from django.views.generic.detail import DetailView
-from .models import Book,Author, Category, Prestamo, User, Editor,Renovacion, Multa
-from .forms import BookForm, AuthorForm, PrestamoForm,EditorForm,RenovForm
+from .models import Book,Author, Category, Prestamo, User, Editor,Renovacion, Multa, PerfilCliente
+from .forms import BookForm, AuthorForm, PrestamoForm,EditorForm,RenovForm,ClienteForm, BookUpdateForm
 from .models import CustomUser
 from django.contrib import messages
+from django.utils import timezone
+from django.shortcuts import redirect
 
 class UsuarioListView(LoginRequiredMixin, ListView):
     model = CustomUser
@@ -26,6 +28,24 @@ class RegistrarUsuarioView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def test_func(self):
         return self.request.user.is_admin()
+
+
+class ClienteListView(LoginRequiredMixin, ListView):
+    model = PerfilCliente
+    template_name = 'prestamos/cliente_list.html'
+    context_object_name = 'clientes'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        for cliente in context['clientes']:
+            cliente.prestamos = Prestamo.objects.filter(user=cliente.user)
+        
+        return context
+
+class ClienteDetailView(LoginRequiredMixin, DetailView):
+    model = PerfilCliente
+    template_name = 'prestamos/cliente_detail.html'
+    context_object_name = 'cliente'
 
 class BookListView(LoginRequiredMixin,ListView):
     model= Book
@@ -55,11 +75,10 @@ class BookDeleteView(LoginRequiredMixin,DeleteView):
 
 class BookUpdateView(LoginRequiredMixin,UpdateView):
     model = Book 
-    form_class= BookForm
-    template_name = 'prestamos/book_form.html' 
+    form_class= BookUpdateForm
+    template_name = 'prestamos/book_update.html' 
     context_object_name = 'actualizarlibro' 
     success_url = reverse_lazy('book')
-    
     def form_valid(self, form):
         return super().form_valid(form)
 
@@ -108,19 +127,75 @@ class PrestamoListView(ListView):
     context_object_name='listaprestamos'
 
     def get_queryset(self):
-        return Prestamo.objects.filter(devuelto=False)
+        return Prestamo.objects.all()
 
-class PrestamoCreateView(LoginRequiredMixin,CreateView):
-    model= Prestamo
-    template_name= 'prestamos/prestamo_create.html'
-    context_object_name='crearprestamo'
-    success_url= reverse_lazy('home')
-    form_class= PrestamoForm
+
+from django.db import transaction
+
+class PrestamoCreateView(LoginRequiredMixin, CreateView):
+    model = Prestamo
+    form_class = PrestamoForm
+    template_name = 'prestamos/prestamo_create.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cliente_form'] = ClienteForm(self.request.POST or None)
+        return context
+
+    def form_valid(self, form):
+        cliente_form = ClienteForm(self.request.POST)
+        if cliente_form.is_valid():
+            with transaction.atomic():
+                rut = cliente_form.cleaned_data['rut']
+                
+                # Verificar si el cliente ya existe
+                cliente = PerfilCliente.objects.filter(rut=rut).first()
+
+                if not cliente:  # Si el cliente no existe, crearlo
+                    user = CustomUser.objects.create(
+                        rut=rut,
+                        username=cliente_form.cleaned_data['name'],
+                        last_name=cliente_form.cleaned_data['last_name'],
+                        phone=cliente_form.cleaned_data['phone'],
+                        mail=cliente_form.cleaned_data['mail'],
+                        rol=False  # O poner el valor que corresponda
+                    )
+                    cliente = PerfilCliente.objects.create(
+                        user=user,
+                        name=cliente_form.cleaned_data['name'],
+                        last_name=cliente_form.cleaned_data['last_name'],
+                        rut=rut,
+                        phone=cliente_form.cleaned_data['phone'],
+                        mail=cliente_form.cleaned_data['mail']
+                    )
+                else:
+                    # Si el cliente existe, recuperarlo
+                    user = cliente.user
+
+                # Asignar el cliente al préstamo
+                form.instance.clientes = cliente  # Aquí asociamos el cliente al préstamo
+                form.instance.user = self.request.user  # Asignar el usuario actual al préstamo
+
+                # Guardar el préstamo
+                return super().form_valid(form)
+
+        return self.form_invalid(form)
+
 
 class PrestamoDetailView(LoginRequiredMixin,DetailView):
     model = Prestamo
     template_name = 'prestamos/prestamo_detail.html'
     context_object_name = 'detalleprestamo'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        prestamo = self.get_object()
+
+        cliente = prestamo.user.perfil_cliente
+        context['cliente'] = prestamo.cliente
+        context['renovaciones'] = prestamo.renovaciones.all() 
+
+        return context
 
 class EditorListView(ListView):
     model= Editor
